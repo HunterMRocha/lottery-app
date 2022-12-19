@@ -10,7 +10,7 @@ type Props = {
 }
 
 function CountdownTimer() {
-    const { contract } = useContract(process.env.NEXT_PUBLIC_LOTTERY_KEY_CONTRACT_ADDRESS);
+    const { contract } = useContract('0x15B1520C0E49822114b0224D2E1C4BC41f54C4De6');
     const { data:expiration } = useContractRead(contract, "expiration"); 
 
     const renderer = ({hours, minutes, seconds, completed }: Props) => {

@@ -114,8 +114,8 @@ const Home: NextPage = () => {
   
   if (!address) return (  
     <div>
-      <Loading />  
       <Login />
+      {/* <Loading />   */}
     
     </div>
   )

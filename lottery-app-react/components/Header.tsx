@@ -13,7 +13,7 @@ function Header() {
             <div className="flex items-center space-x-2"> 
             <img 
                 className="rounded-full h-20 w-20"
-                src="https://i.pinimg.com/originals/d5/43/a4/d543a4a2f9c9ebb2f4231fcbafcaa44c.jpg"
+                src="https://i.imgur.com/GQ3MeQH_d.webp?maxwidth=640&shape=thumb&fidelity=medium"
                 alt=""
             />
             <div >

@@ -10,7 +10,7 @@ function Login() {
         <div className="flex flex-col items-center mb-10">
             <img 
                 className="rounded-full h-56 w-56 mb-10"
-                src="https://i.imgur.com/4h7mAu7.png"
+                src="https://i.imgur.com/GQ3MeQH_d.webp?maxwidth=640&shape=thumb&fidelity=medium"
                 alt=""
             />
             <h1 className="text-6xl text-white font-bold">Lottery Draw</h1>

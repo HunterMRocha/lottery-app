@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Header from '../components/Header'
 import Loading from '../components/Loading';
 import { ethers } from "ethers";
+import Marquee from "react-fast-marquee";
 
 import { 
   useAddress,
@@ -19,6 +20,7 @@ import Login from '../components/Login'
 import { currency } from '../constants';
 import CountdownTimer from '../components/CountdownTimer';
 import toast from "react-hot-toast";
+import AdminControls from '../components/AdminControls';
 
 
 const Home: NextPage = () => {
@@ -26,7 +28,7 @@ const Home: NextPage = () => {
   const [userTickets, setUserTickets] = useState(0);
   const [quantity, setQuantity] = useState<number>(1);
 
-  const { contract } = useContract("0x15B1520C0E4982214b0224D2E1c4BC41f54C4De6");
+  const { contract } = useContract(process.env.NEXT_PUBLIC_LOTTERY_KEY_CONTRACT_ADDRESS);
   const { data:remainingTickets, isLoading } = useContractRead(contract, "RemainingTickets");    
   const { data:currentWinningReward } = useContractRead(contract, "CurrentWinningReward");  
   const { data:ticketPrice } = useContractRead(contract, "ticketPrice"); 
@@ -34,7 +36,15 @@ const Home: NextPage = () => {
   const { data:tickets } = useContractRead(contract, "getTickets");
   const { data:expiration } = useContractRead(contract, "expiration"); 
 
+  const { data:lastWinner } = useContractRead(contract, "lastWinner");
+  const { data:lastWinnerAmount } = useContractRead(contract, "lastWinnerAmount"); 
+  const { data:isLotteryOperator } = useContractRead(contract, "lotteryOperator");
+
   const { mutateAsync: BuyTickets } = useContractWrite(contract, "BuyTickets")
+  const { mutateAsync: WithdrawWinnings} = useContractWrite(contract, "WithdrawWinnings")
+
+
+  const { data: winnings } = useContractRead(contract, "getWinningsForAddress", address);
 
   useEffect(() => {
     if(!tickets) return;
@@ -78,6 +88,25 @@ const Home: NextPage = () => {
     }
   }
 
+  const onWithdrawWinnings = async () => {
+    const notification = toast.loading("Withdrawing winnings...")
+
+    try {
+      const data = await WithdrawWinnings([{}]);
+
+
+      toast.success("Tickets purchased successfully!", {
+        id: notification,
+      });
+
+    } catch(err) {
+        toast.error("Whoops, something went wrong!", {
+          id: notification,
+        });
+        console.error("contract call failure", err); 
+    }
+  }
+
 
   if (isLoading) return (
     <Loading /> 
@@ -94,6 +123,55 @@ const Home: NextPage = () => {
 
       <div className="flex-1">
         <Header /> 
+
+        <Marquee className="bg-[#0A1F1C] p-5 mb-5" gradient={false} speed={80}>
+          <div className="flex space-x-20 mx-10">
+
+            <h4 className="text-white font-bold">
+                Last Winner: 
+                  {" "}
+                  {lastWinner?.toString()} 
+            </h4>
+
+            <h4 className="text-white font-bold"
+              >Previous Winnings: 
+              {" "}
+              { lastWinnerAmount && 
+                ethers.utils.formatEther(lastWinnerAmount?.toString())
+              }{" "} {currency}
+            </h4>
+
+          </div>
+        </Marquee> 
+
+        {isLotteryOperator === address && (
+          <div className="flex justify-center">
+            <AdminControls />
+          </div>
+        )}
+
+        {/* winnings section */}
+        {winnings > 0 && (
+          <div className="max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-5">
+            <button 
+              onClick={onWithdrawWinnings}
+              className="p-5 bg-gradient-to-b from-orange-500 to-emerald-600 animate-pulse text-center 
+                rounded-xl w-full">
+
+                <p className="font-bold" >Winner Winner Chicken Dinner!</p>
+
+                <p>Total Winnings: {ethers.utils.formatEther(winnings.
+                  toString())}{" "}
+                  {currency}
+                </p>
+
+                <br />
+
+                <p className="font-semibold">Click here to withdraw</p>
+
+            </button>
+          </div>
+        )}
 
         {/* Next draw area */}
         <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start 
@@ -219,17 +297,17 @@ const Home: NextPage = () => {
       <footer className="border-t border-emerald-500/20 flex items-center text-white justify-between p-5">
             <img
               className="h-10 w-10 filter hue-rotate opacity-20 rounded-full"
-              src="https://i.imgur.com/4h7mAu7.png"
+              src="https://i.imgur.com/GQ3MeQH_d.webp?maxwidth=640&shape=thumb&fidelity=medium"
               alt=""
             />
 
             <p className='text-xs text-emerald-900 pl-5'>
                 Disclaimer: This product is made for informational and educational purposes only.
                 The content of this project are not intended to be used to lure gambling. Instead, 
-                the information presented is meant for nothing mroe than learning and entertainment purposes.
+                the information presented is meant for nothing more than learning and entertainment purposes.
                 We are not liable for any losses that are incurred or problems that arise at online casinos or 
                 elsewhere after the reading and consideration of this project. If you are gambling online utilizing
-                this project, you are doing so completely at your own risk. Thank you
+                this project, you are doing so completely at your own risk. Thank you!
             </p>
       </footer>
 

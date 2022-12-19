@@ -117,8 +117,8 @@ const Home: NextPage = () => {
   return (
     <div className="bg-[#091B18] min-h-screen flex flex-col">
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Lottery MetaMask App</title>
+        <link rel="icon" href="https://i.imgur.com/GQ3MeQH_d.webp?maxwidth=640&shape=thumb&fidelity=medium" />
       </Head>
 
       <div className="flex-1">
@@ -167,7 +167,7 @@ const Home: NextPage = () => {
 
                 <br />
 
-                <p className="font-semibold">Click here to withdraw</p>
+                <p className="font-semibold">Click here to Withdraw</p>
 
             </button>
           </div>

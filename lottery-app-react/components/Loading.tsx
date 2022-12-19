@@ -8,7 +8,7 @@ function Loading() {
         <div className="flex items-center space-x-2 mb-10">
             <img 
                 className="rounded-full h-20 w-20"
-                src='https://i.imgur.com/4h7mAu7.png'
+                src='https://i.imgur.com/GQ3MeQH_d.webp?maxwidth=640&shape=thumb&fidelity=medium'
                 alt=''
             />
             <h1 className="text-lg text-white font-bold">Loading...</h1>
